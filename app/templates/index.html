@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+
+{% block header %}Сокращение ссылок{% endblock header %}
+
+{% block content %}
+
+<div class="text-center">
+    <p class="col-md-6 offset-md-3">Вставьте ссылку в поле, нажмите кнопку <code>Отправить</code> и получите
+        сокращенную ссылку.
+    {% if current_user.is_anonymous %}
+        Чтобы сохранять все ссылки, <a href="{{ url_for('user.login') }}">Войдите</a> или <a
+                href="{{ url_for('user.signup') }}">Зарегистрируйтесь</a>.
+    {% endif %}
+    </p>
+</div>
+<div class="col-md-6 offset-md-3">
+    <form>
+        <div class="form-group">
+            {{ form.full_link(class="form-control", placeholder="URL", type="text", id="full_linkInput") }}
+            <input class="form-control" id="errorInput" type="text" style="display:none;" readonly>
+
+            <div class="input-group mb-3" style="display:none;" id="successDiv">
+                <input class="form-control" id="successInput" type="text" readonly aria-describedby="button-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="myFunction()">
+                        Copy
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        <button class="btn btn-info btn-lg btn-block" type="submit" id="full_linkButton">Отправить</button>
+        <a class="btn btn-secondary btn-lg btn-block" href="{{ url_for('link.index') }}" role="button"
+           style="display:none;" id="successButton">Обновить</a>
+    </form>
+</div>
+
+
+<!-- Script JavaScript -->
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $('form').on('submit', function (event) {
+
+            event.preventDefault();
+
+            $.ajax({
+                data: {
+                    full_link: $('#full_linkInput').val()
+                },
+                type: 'POST',
+                url: '/process',
+                dataType: 'json'
+            })
+                .done(function (data) {
+                    if (data.short_link) {
+                        $('#full_linkInput').css('display', 'none');
+                        $('#successDiv').show();
+                        $('#successInput').val(data.short_link);
+                        $('#full_linkButton').css('display', 'none');
+                        $('#successButton').show();
+                    } else {
+                        $('#full_linkInput').css('display', 'none');
+                        $('#errorInput').val(data.errors).show();
+                        $('#full_linkButton').css('display', 'none');
+                        $('#successButton').show();
+                    }
+
+                })
+
+        });
+
+    });
+</script>
+
+<script>
+    function myFunction() {
+        var copyText = document.getElementById("successInput");
+        copyText.select();
+        document.execCommand("copy");
+    }
+</script>
+
+{% endblock content %}
+
