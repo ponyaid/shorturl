@@ -24,9 +24,4 @@ def create_app(config_filename=Config):
     return app
 
 
-# if __name__ == "__main__":
-#     from config import Config
-#     app = create_app(Config)
-#     app.run()
-
 
