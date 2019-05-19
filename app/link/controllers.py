@@ -42,12 +42,12 @@ def process():
     return jsonify({'errors': form.full_link.errors[-1]})
 
 
-@module.route('/<page>')
-def _redirect(page):
-    link = Link.query.filter_by(page=page).first()
-    link.visits += 1
-    db.session.commit()
-    return redirect(f'{link.full_link}')
+# @module.route('/<page>')
+# def _redirect(page):
+#     link = Link.query.filter_by(page=page).first()
+#     link.visits += 1
+#     db.session.commit()
+#     return redirect(f'{link.full_link}')
 
 
 @module.route('/links', methods=['GET'])
