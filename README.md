@@ -1,7 +1,7 @@
 # Short URL project
 [Проект на heroku](https://short-url-project.herokuapp.com)
 
-### Setup
+## Setup
     git clone https://github.com/ponyaid/shorturl.git
     cd shorturl
     virtualenv -p python3 venv
